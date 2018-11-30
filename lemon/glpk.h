@@ -208,6 +208,7 @@ namespace lemon {
 
     ///Solve with primal simplex
     SolveExitStatus solvePrimal();
+    SolveExitStatus solvePrimalExact();
 
     ///Solve with dual simplex
     SolveExitStatus solveDual();

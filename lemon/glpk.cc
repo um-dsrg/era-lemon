@@ -648,6 +648,38 @@ namespace lemon {
     return SOLVED;
   }
 
+  GlpkLp::SolveExitStatus GlpkLp::solvePrimalExact() {
+    _clear_temporals();
+
+    glp_smcp smcp;
+    glp_init_smcp(&smcp);
+
+    smcp.msg_lev = _message_level;
+    smcp.presolve = _presolve;
+
+    // If the basis is not valid we get an error return value.
+    // In this case we can try to create a new basis.
+    switch (glp_simplex(lp, &smcp)) {
+      case 0:
+        break;
+      case GLP_EBADB:
+      case GLP_ESING:
+      case GLP_ECOND:
+        glp_term_out(false);
+        glp_adv_basis(lp, 0);
+        glp_term_out(true);
+        if (glp_simplex(lp, &smcp) != 0) return UNSOLVED;
+        break;
+      default:
+        return UNSOLVED;
+    }
+
+    if (glp_exact(lp, &smcp) != 0)
+      return UNSOLVED;
+
+    return SOLVED;
+  }
+
   GlpkLp::SolveExitStatus GlpkLp::solveDual() {
     _clear_temporals();
 
