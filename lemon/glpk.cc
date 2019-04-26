@@ -674,10 +674,10 @@ namespace lemon {
         return UNSOLVED;
     }
 
-    if (glp_exact(lp, &smcp) != 0 || glp_get_status(lp) == GLP_NOFEAS)
-      return UNSOLVED;
-
-    return SOLVED;
+    if (glp_exact(lp, &smcp) == 0 && glp_get_status(lp) == GLP_OPT)
+      return SOLVED;
+    // else
+    return UNSOLVED;
   }
 
   GlpkLp::SolveExitStatus GlpkLp::solveDual() {
