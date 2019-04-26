@@ -674,7 +674,7 @@ namespace lemon {
         return UNSOLVED;
     }
 
-    if (glp_exact(lp, &smcp) != 0)
+    if (glp_exact(lp, &smcp) != 0 || glp_get_status(lp) == GLP_NOFEAS)
       return UNSOLVED;
 
     return SOLVED;
